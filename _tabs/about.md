@@ -1,5 +1,5 @@
 ---
-title: About
-layout: about
-icon: fas fa-user
-order: 4
+layout: About
+icon: fas fa-about
+order: 3
+---
