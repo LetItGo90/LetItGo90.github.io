@@ -1,3 +1,8 @@
+---
+title: About
+layout: about
+---
+
 ## About Me
 
 I have **5 years of experience** working in cybersecurity roles, including threat analysis, insider threat detection, and SOC operations. My work focuses on **cloud security, Kubernetes, threat hunting, and automation**—areas I’m passionate about and always eager to learn more about.
