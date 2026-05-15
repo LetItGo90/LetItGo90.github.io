@@ -32,12 +32,6 @@ Everything in this project is Terraform. Every resource, every role assignment, 
 
 The whole thing runs through GitHub Actions on push to main. Terraform plan runs on every PR so you can see exactly what's changing before it goes anywhere near the environment. On merge it applies automatically. No manual runs, no local state, no "it works on my machine."
 
-<img width="1904" height="873" alt="image" src="https://github.com/user-attachments/assets/560b59eb-afa7-40ad-81ae-042a2bd1c7d5" />
-
-<img width="1909" height="304" alt="image" src="https://github.com/user-attachments/assets/34131711-eb1e-4cb6-bb4d-a76d30970f2a" />
-
-<img width="1915" height="290" alt="image" src="https://github.com/user-attachments/assets/3af87b3f-1fa4-4dee-84e2-95b031c8c7e7" />
-
 The Terraform workflow handles plan, format check, validation, a Checkov IaC security scan, and then apply all in one pipeline:
 
 ```yaml
@@ -312,13 +306,9 @@ My reason for not leaning on auto-remediation heavily is that out of the box, Cu
 
 ## Cloud Custodian — The Output
 
-After each run Custodian creates an artifact in GitHub Actions containing a zip of all findings. Here's what that looks like:
+After each run Custodian creates an artifact in GitHub Actions containing a zip of all findings and here's an example of what one of the result files actually contains:
 
-<img width="1896" height="757" alt="image" src="https://github.com/user-attachments/assets/c9831377-0b9e-4423-91f5-558a7921a03c" />
-
-And here's an example of what one of the result files actually contains:
-
-<img width="1197" height="50" alt="image" src="https://github.com/user-attachments/assets/2dc8430c-48c0-4ab8-9446-625798d710f1" />
+![Prowler Findings](/assets/custodian_finding.png)
 
 Each policy gets its own folder with a `resources.json` of what it matched and a log of the run. Not pretty, but it gets the job done and it's completely free. You could easily build a small HTML dashboard on top of the JSON to make it presentable — I've had Claude knock one of those out before and it's not a complicated ask.
 
@@ -338,19 +328,17 @@ The reason I didn't wire up every policy this way is the same reason I kept most
 
 Prowler is one of the most widely used open source cloud security scanners out there. I'd used it before in Pwned Labs pentesting courses so it felt like a natural fit to pull into this project. They have a web app version that gives you one free scan. You connect your Azure account, create a service principal with the right permissions, and let it run. I had dependency issues trying to run it locally so the web app was an easy call.
 
-<img width="1915" height="859" alt="image" src="https://github.com/user-attachments/assets/19a7ac9f-b75a-4108-8daa-50ff4cebbb06" />
+![Prowler Dashboard](/assets/prowler_dashboard.png)
 
 The overall score came back at **49.83% — Moderate Risk**. Exactly what I was hoping for. A 100% clean score would mean either the tool isn't working or the environment is too simple to be interesting.
 
 The score breakdown by pillar tells the real story though.
 
-<img width="1581" height="138" alt="image" src="https://github.com/user-attachments/assets/7c60b632-5a12-4234-a10d-b42a66d61ab6" />
+![Prowler Findings](/assets/prowler_findings.png)
 
 IAM came back at 100% which is expected given the zero-trust identity setup with OIDC and Managed Identities. Attack Surface was 96.9%. Then Logging and Monitoring came in at 9.7% and Encryption sat at 50%.
 
 The logging score is honestly the most realistic finding in the whole project. In almost every real Azure environment I've seen, logging and monitoring is the worst performing category. It's boring to configure, it costs money to retain, and it's easy to deprioritize until something actually goes wrong. Even in a lab environment built with security in mind it tanked the score, and that tells you something.
-
-<img width="1891" height="922" alt="image" src="https://github.com/user-attachments/assets/d1f49210-a156-47cc-9e27-9a6f89511e7d" />
 
 50 total findings across the subscription. The highlights were storage accounts not enforcing Customer Managed Keys, Network Watcher flow logs not being shipped to a Log Analytics workspace, and storage default network access rules being too permissive. All intentional, all sitting there waiting to be fixed.
 
