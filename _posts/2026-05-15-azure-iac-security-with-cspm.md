@@ -3,9 +3,10 @@ title: "Building an Azure Cloud Security Platform from Scratch"
 date: 2026-05-15
 categories: [Azure, Security]
 tags: [azure, terraform, cspm, prowler, cloud-custodian, logic-apps, devsecops]
+render_with_liquid: false
 ---
 
-I've been trying to build as much projects/lab's as possible. I've been super interested in transiting into a more cloud sec focused role and i've got all the fancy certs. So I thought its time to buidl stuff. I've done several simialr projects to this before , here: https://github.com/LetItGo90/Azure-Vulnerability-Scanning-Compliance-Platform, https://github.com/LetItGo90/az_auth_project, and her ehttps://github.com/LetItGo90/Azure-Secure-Landing-Zone-Homelab-Project/. In this one I wanted to try and combine elements of them and expand on them. IAAC skills take a lot of muscle memory to remeber, what to do and why.
+I've been trying to build as much projects/lab's as possible. I've been super interested in transiting into a more cloud sec focused role and i've got all the fancy certs. So I thought its time to buidl stuff. I've done several simialr projects to this before , here: [Azure Vulnerability Scanning](https://github.com/LetItGo90/Azure-Vulnerability-Scanning-Compliance-Platform), [az_auth_project](https://github.com/LetItGo90/az_auth_project), and [Azure Secure Landing Zone](https://github.com/LetItGo90/Azure-Secure-Landing-Zone-Homelab-Project/). In this one I wanted to try and combine elements of them and expand on them. Iaac skills take a lot of muscle memory to remeber, what to do and why.
 
 The repo is here if you want to follow along: [LetItGo90/Azure-Cloud-Security-Platform](https://github.com/LetItGo90/Azure-Cloud-Security-Platform)
 
@@ -17,9 +18,9 @@ The idea was to build a complete Azure security platform using Terraform with re
 
 The foundation is a hub-spoke network topology. The hub holds Azure Firewall which controls all traffic flowing between spokes. Nothing communicates with anything it isn't supposed to. All the shared security services live in the hub and the spoke is where workloads sit.
 
-For the architecture diagram I used IriusRisk, which is a threat modeling platform with a free community tier. It lets you build architecture diagrams with security controls and threat mappings baked in, which is a much better fit for this kind of project than a Mermaid flowchart. The Mermaid output looked awful to be honest. IriusRisk gives you something you can actually share with a stakeholder without apologizing for it.
+For the architecture diagram I used mermaid. If you didn't know, you can generate architecture diagrams straight in github. Granted it can look a bit ugly and will take some tweaking but for small homelab projects it gets the job done.
 
-![IriusRisk Architecture Diagram]
+<img width="1732" height="689" alt="image" src="https://github.com/user-attachments/assets/3ebcc853-19d6-487b-accc-682fea869382" />
 
 For identity I went zero-trust all the way. GitHub Actions authenticates to Azure using OIDC federation so there are no long-lived secrets stored in GitHub anywhere. The pipeline gets a short-lived token, does its job, and that's it. Inside Azure everything uses Managed Identities for service-to-service auth. No passwords, no keys being passed around.
 
