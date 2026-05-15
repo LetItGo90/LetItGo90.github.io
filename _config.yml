@@ -41,7 +41,7 @@ social:
 
 # Site Verification Settings
 webmaster_verifications:
-  google: # ← ADD THIS after Google Search Console setup
+  google: 6kUOV_peTFkNwFWIvyz8FV5ppChX6rwpJwO_YkxR3Fc
   bing:
   alexa:
   yandex:
@@ -191,6 +191,3 @@ jekyll-archives:
   permalinks:
     tag: /tags/:name/
     category: /categories/:name/
-
-webmaster_verifications:
-  google: 6kUOV_peTFkNwFWIvyz8FV5ppChX6rwpJwO_YkxR3Fc
