@@ -1,6 +1,5 @@
 # The Site Configuration
-webmaster_verifications:
-  google: 6kUOV_peTFkNwFWIvyz8FV5ppChX6rwpJwO_YkxR3Fc
+
 # Import the theme
 theme: jekyll-theme-chirpy
 
@@ -193,3 +192,5 @@ jekyll-archives:
     tag: /tags/:name/
     category: /categories/:name/
 
+webmaster_verifications:
+  google: 6kUOV_peTFkNwFWIvyz8FV5ppChX6rwpJwO_YkxR3Fc
