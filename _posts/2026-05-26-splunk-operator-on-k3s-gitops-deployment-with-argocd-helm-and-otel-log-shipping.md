@@ -192,7 +192,7 @@ I ended up with four HEC tokens from various test runs and had to work out which
 
 To create one: navigate to **Settings > Data Inputs > HTTP Event Collector > New Token**, give it a name, and on the input settings page select `main` as the allowed index.
 
-![](/assets/img/hec_token.png)
+![](/assets/hec_token.png)
 ---
 
 ## Why Everything Is in index=main
@@ -223,7 +223,7 @@ Then search in Splunk:
 index=main sourcetype="kube:container:falco" | head 5 | table _time, rule, priority, output
 ```
 
-![](/assets/img/etc_shadow.png)
+![](/assets/etc_shadow.png)
 
 
 If that returns results the full pipeline is working. Falco detects the event, writes to container stdout, the OTel agent reads from `/var/log/pods/`, ships to HEC, and it lands in `index=main`.
