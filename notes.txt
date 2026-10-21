@@ -1,0 +1,41 @@
+PEERSTITCH — New Malware Implant Hitting FortiGate Firewalls at Scale
+
+Unit 42 dropped a report on a threat cluster (CL-STA-0954) that leveraged CVE-2024-47575 (the FortiManager zero-day from late 2024) to pivot from FortiManager into ~500 FortiGate firewalls at a telecom provider
+The novel piece is the implant itself — PEERSTITCH hijacks FortiOS tagged VPN sessions for covert C2, blending right in with legitimate VPN traffic and bypassing standard FortiOS security checks. You wouldn’t see this in normal traffic analysis
+The tradecraft (FortiManager → FortiGate pivot, custom edge implant, telecom target) lines up with China-nexus activity and the kind of post-exploitation UNC3886 is known for on Fortinet gear
+We run Fortinet — even though CVE-2024-47575 should be patched, the post-exploitation tradecraft is what matters. Worth confirming FortiManager access controls are tight and checking for unexpected VPN session tagging behavior
+CVEs: CVE-2024-47575 (initial access), CVE-2026-9293 (FortiOS flaw used by PEERSTITCH)
+Sources: Unit 42, The Hacker News, SecurityWeek
+
+October Patch Tuesday — 1,413 CVEs and an Actively Exploited Windows Shell Zero-Day
+
+Microsoft’s October Patch Tuesday set a new record with 1,413 CVEs. The one to care about: CVE-2026-96951, a Windows Shell Mark-of-the-Web bypass that’s being actively exploited in the wild
+MotW bypasses let attackers deliver payloads via email or web download that skip SmartScreen and Protected View — the user opens the file with none of the usual safety warnings. These are bread and butter for both APTs and commodity malware initial access
+No public attribution yet on who’s using it, but historically MotW bypasses get picked up fast across the board
+Defender for Endpoint and M365 both depend on MotW as a protection layer — vuln team should prioritize this one
+CVE: CVE-2026-96951
+Sources: BleepingComputer, Tenable, Cyberscoop
+
+Wazza — Device Code Phishing Kit Going After M365 Accounts
+
+LevelBlue SpiderLabs published a deep dive on “Wazza,” a modular phishing kit abusing Microsoft’s OAuth device code flow to hijack M365 accounts. Multiple waves since July, still active
+The play: victim gets a phishing email from a compromised account with a PDF lure → lands on a fake Adobe/DocuSign/OneDrive page → page shows a “verification code” and tells the user to enter it at Microsoft’s real device login. That code is the attacker’s device code — entering it hands over an OAuth token. No fake login page, no password captured, and MFA doesn’t help because the user is authenticating on the legit Microsoft endpoint
+The kit is well-built: Cloudflare Turnstile CAPTCHAs, browser fingerprinting, anti-automation checks, 19 brand themes, infrastructure on Google Sites and Cloudflare Workers. Device code phishing is a known Midnight Blizzard (APT29) TTP — this kit commoditizes it for any operator
+The key mitigation: restrict or disable device code flow in Entra ID via Conditional Access (limit to managed devices / trusted locations). If it’s wide open, this bypasses MFA entirely. Full IOC list is in the report
+Sources: LevelBlue SpiderLabs
+
+curl Project Changing How It Handles Vulnerabilities — Impacts libcurl Too
+
+You already have the CVE-2026-92392 details (HTTP/2 use-after-free, fixed in 8.23.0). The bigger news: starting October 26, the curl project is moving all LOW and MEDIUM severity vulnerability reports to public GitHub issues. High and critical stay private, but everything else will be visible before patches fully roll out across distros
+This applies to both curl (the CLI tool) and libcurl (the library baked into basically everything — RHEL, containers, Python, PHP, server-side tooling). That means lower-severity libcurl flaws will have public details while distros are still working on backports
+Why: maintainers are drowning. They already killed the bug bounty earlier this year because of AI-generated junk submissions, and they’re sitting on 22 pending vulns in this release alone. Daniel Stenberg called it an “avalanche” and said key maintainers are “strained, overloaded”
+Worth being aware of as a shift in the ecosystem — libcurl is in everything we run, and the window between public disclosure and patched distro packages just got wider for lower-severity flaws
+Sources: The Register, Daniel Stenberg’s Blog, The Hacker News
+
+Midnight Blizzard Malware Server Still Delivering Payloads 8+ Weeks After Disclosure
+
+ReversingLabs published research showing that a Midnight Blizzard (APT29/Russia) C2 server tied to the CaptiveCrunch campaign is still actively serving payloads — more than 8 weeks after Microsoft publicly burned it in July
+CaptiveCrunch uses spoofed hotel and airport Wi-Fi captive portals to deliver the CornFlake RAT and harvest traveler credentials. The fact that the infrastructure is still hot suggests either they don’t care about the exposure or they’re still getting enough hits to justify keeping it up
+HHS HC3 also dropped an analyst note on this recently flagging government and healthcare travelers as likely in the target set
+Not on our tracked actor list, but APT29/Russia targeting government traveler credentials is worth awareness for anyone traveling on EPA business
+Sources: ReversingLabs, Microsoft Security Blog, HHS Analyst Note (PDF)
